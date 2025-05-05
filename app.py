@@ -244,8 +244,6 @@ if uploaded_file:
         df_show = df.copy()
         df_input = process_csv_input(df)
         records = df_input.to_dict(orient="records")
-        st.write(records)
-
         headers = {
             "Authorization": f"Bearer {API_KEY}",
             "Content-Type": "application/json"
