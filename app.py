@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT") or st.secrets("AZURE_ENDPOINT")
-API_KEY = os.getenv("API_KEY") or st.secrets("API_KEY")
+AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT") or st.secrets["AZURE_ENDPOINT"]
+API_KEY =  os.getenv("API_KEY") or st.secrets["API_KEY"]
 
 
 st.write("""
@@ -176,16 +176,16 @@ if st.button("Dự đoán"):
 
 
 def process_csv_input(df):
-    df['NewBusiness'] = df['NewExist'].apply(lambda x: 0 if x == 1 else 1)
-    df['IsFranchised'] = df['FranchiseCode'].apply(lambda x: 0 if x <= 1 else 1)
-    df['RevLineCr'] = df['RevLineCr'].apply(lambda x: 0 if x in ['N', '0'] else (1 if x in ['Y', '1'] else None))
+    df['NewBusiness'] = df['NewExist'].apply(lambda x: 0 if x == 1 else 1).fillna(0)
+    df['IsFranchised'] = df['FranchiseCode'].apply(lambda x: 0 if x <= 1 else 1).fillna(0)
+    df['RevLineCr'] = df['RevLineCr'].apply(lambda x: 0 if x in ['N', '0'] else (1 if x in ['Y', '1'] else None)).fillna(0)
     df['LowDoc'] = df['LowDoc'].apply(lambda x: 0 if x in ['N', '0'] else (1 if x in ['Y', '1'] else None))
-    currency_columns = ['DisbursementGross', 'SBA_Appv', 'GrAppv']
+    currency_columns = ['SBA_Appv', 'GrAppv']
     for col_name in currency_columns:
         df[col_name] = df[col_name].str.replace(r'[$,]', '', regex=True).astype(float)
 
     df['Industry'] = df['NAICS'].astype(str).str[:2]
-    df['Industry_Name'] = df['Industry'].map(naics_mapping)
+    df['Industry_Name'] = df['Industry'].map(naics_mapping).fillna('Retail_trade')
     df['DisbursementDate'] = df['DisbursementDate'].apply(
         lambda x: '0' + x if len(x) == 8 else x
     )
@@ -240,7 +240,7 @@ if uploaded_file:
     st.dataframe(df.head())
 
 
-    if st.button("Dự đoán"):
+    if st.button("Dự đoán file csv"):
         df_show = df.copy()
         df_input = process_csv_input(df)
         records = df_input.to_dict(orient="records")
