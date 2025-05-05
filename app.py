@@ -163,7 +163,8 @@ if st.button("Dự đoán"):
             predictions = result["Results"]["WebServiceOutput0"]
 
             df_predictions = pd.DataFrame(predictions)
-
+            df_predictions["Kết quả"] = df_predictions["Scored Labels"].apply(lambda x: "Ổn" if x == 0 else "Có nguy cơ")
+            df_predictions = df_predictions.drop(columns="Scored Labels")
             st.success("Dự đoán hoàn tất!")
             st.dataframe(df_predictions)
         else:
@@ -242,7 +243,7 @@ if uploaded_file:
     if st.button("Dự đoán"):
         df_show = df.copy()
         df_input = process_csv_input(df)
-        records = df.to_dict(orient="records")
+        records = df_input.to_dict(orient="records")
         st.write(records)
 
         headers = {
@@ -265,15 +266,16 @@ if uploaded_file:
                 for output in outputs:
                     predictions.append(output['Scored Labels'])
                 df_show['prediction'] = predictions
-
+                df_show['Kết quả'] = df_show["prediction"].apply(lambda x: "Ổn" if x == 0 else "Có nguy cơ")
+                df_show = df_show.drop(columns='prediction')
                 st.success("✅ Dự đoán hoàn tất!")
                 st.dataframe(df_show)
 
                 # Cho phép tải file kết quả về
                 csv = df_show.to_csv(index=False).encode("utf-8")
-                st.download_button("📥 Tải file kết quả", csv, "predicted_results.csv", "text/csv")
+                st.download_button("Tải file kết quả", csv, "predicted_results.csv", "text/csv")
             else:
-                st.error(f"❌ Lỗi trả về từ Azure ML: {result}")
+                st.error(f"Lỗi trả về từ Azure ML: {result}")
 
         except Exception as e:
-            st.error(f"❌ Lỗi khi gửi dữ liệu: {e}")
+            st.error(f"Lỗi khi gửi dữ liệu: {e}")
