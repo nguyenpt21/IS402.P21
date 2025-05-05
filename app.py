@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT") or st.secrets("AZURE_ENDPOINT")
-BEARER_TOKEN = os.getenv("BEARER_TOKEN") or st.secrets("BEARER_TOKEN")
+API_KEY = os.getenv("API_KEY") or st.secrets("API_KEY")
 
 
 st.write("""
@@ -146,7 +146,7 @@ if st.button("Dự đoán"):
     }
 
     headers = {
-            "Authorization": f"Bearer {BEARER_TOKEN}",
+            "Authorization": f"Bearer {API_KEY}",
             "Content-Type": "application/json"
         }
 
@@ -247,7 +247,7 @@ if uploaded_file:
         st.write(records)
 
         headers = {
-            "Authorization": f"Bearer {BEARER_TOKEN}",
+            "Authorization": f"Bearer {API_KEY}",
             "Content-Type": "application/json"
         }
 
