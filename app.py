@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT")
-BEARER_TOKEN = os.getenv("BEARER_TOKEN")
+AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT") or st.secrets("AZURE_ENDPOINT")
+BEARER_TOKEN = os.getenv("BEARER_TOKEN") or st.secrets("BEARER_TOKEN")
 
 
 st.write("""
