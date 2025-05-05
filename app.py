@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT") or st.secrets["AZURE_ENDPOINT"]
-API_KEY =  os.getenv("API_KEY") or st.secrets["API_KEY"]
+AZURE_ENDPOINT = st.secrets["AZURE_ENDPOINT"]
+API_KEY =  st.secrets["API_KEY"]
 
 
 st.write("""
